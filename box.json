@@ -4,7 +4,7 @@
         "."
     ],
     "files": [
-        "LICENSE.md"
+        "LICENSE"
     ],
     "finder": [
         {
@@ -13,8 +13,9 @@
             "in": "vendor"
         }
     ],
+    "compression": "GZ",
     "git-version": "package_version",
-    "main": "phpdoccheck",
-    "output": "phpdoccheck.phar",
-    "stub": true
+    "main":        "bin/phpdoc-checker",
+    "output":      "phpdoc-checker.phar",
+    "stub":        true
 }

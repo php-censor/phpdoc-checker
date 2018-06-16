@@ -1,13 +1,6 @@
 <?php
-/**
- * PHP Docblock Checker
- *
- * @copyright    Copyright 2014, Block 8 Limited.
- * @license      https://github.com/Block8/php-docblock-checker/blob/master/LICENSE.md
- * @link         http://www.phptesting.org/
- */
 
-namespace PhpDocblockChecker;
+namespace PhpDocChecker;
 
 use DirectoryIterator;
 use Symfony\Component\Console\Command\Command;
@@ -17,6 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Console command to check a directory of PHP files for Docblocks.
+ *
  * @author Dan Cryer <dan@block8.co.uk>
  */
 class CheckerCommand extends Command

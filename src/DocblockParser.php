@@ -1,10 +1,12 @@
 <?php
 
-namespace PhpDocblockChecker;
+namespace PhpDocChecker;
 
 /**
  * Parse the docblock of a function or method
+ *
  * @author Paul Scott <paul@duedil.com>
+ *
  * {@link http://www.github.com/icio/PHP-DocBlock-Parser}
  */
 class DocBlockParser

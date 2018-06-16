@@ -1,8 +1,7 @@
 <?php
 
-namespace PhpDocblockChecker;
+namespace PhpDocChecker;
 
-use PhpDocblockChecker\DocBlockParser;
 use PhpParser\Comment\Doc;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Class_;
@@ -13,7 +12,6 @@ use PhpParser\ParserFactory;
 
 /**
  * Uses Nikic/PhpParser to parse PHP files and find relevant information for the checker.
- * @package PhpDocblockChecker
  */
 class FileProcessor
 {

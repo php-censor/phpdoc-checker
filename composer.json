@@ -1,39 +1,40 @@
 {
-    "name"             : "block8/php-docblock-checker",
-    "description"      : "A simple tool for checking that your PHP classes and methods use docblocks.",
+    "name"             : "php-censor/phpdoc-checker",
+    "description"      : "A simple tool for checking that your PHP classes and methods use PHPDocs (PHP DocBlocks Checker fork).",
     "minimum-stability": "stable",
     "type"             : "library",
-    "keywords"         : ["php", "phpci", "testing", "docblock", "comment", "checker", "code quality"],
-    "homepage"         : "https://www.phptesting.org/",
+    "keywords"         : ["php", "php-censor", "testing", "docblock", "phpdoc", "comment", "checker", "code quality"],
+    "homepage"         : "https://github.com/php-censor/phpdoc-checker",
     "license"          : "BSD-2-Clause",
-
-    "authors": [
+    "authors":  [
         {
-            "name"    : "Dan Cryer",
-            "email"   : "dan.cryer@block8.co.uk",
+            "name":     "Dmitry Khomutov",
+            "email":    "poisoncorpsee@gmail.com",
+            "homepage": "http://corpsee.com",
+            "role":     "PHPDoc Checker"
+        },
+        {
+            "name":     "Dan Cryer",
+            "email":    "dan.cryer@block8.co.uk",
             "homepage": "http://www.block8.co.uk",
-            "role"    : "Developer"
+            "role":     "PHP DocBlocks Checker developer"
         }
     ],
-
     "support": {
-        "issues": "https://github.com/Block8/php-docblock-checker/issues",
-        "source": "https://github.com/Block8/php-docblock-checker"
+        "issues": "https://github.com/php-censor/phpdoc-checker/issues",
+        "source": "https://github.com/php-censor/phpdoc-checker"
     },
-
+    "autoload": {
+        "psr-4": {
+            "PhpDocChecker\\": "src/"
+        }
+    },
     "require": {
-        "php": ">=5.3.3",
+        "php":              ">=5.6.0",
         "nikic/php-parser": "3.*",
-        "symfony/console": "3.*"
+        "symfony/console":  "~3.4.0"
     },
-
-    "require-dev": {
-        "phpmd/phpmd": "~2.0",
-        "squizlabs/php_codesniffer": "~1.5",
-        "phploc/phploc": "~2.0"
-    },
-
     "bin": [
-        "phpdoccheck"
+        "bin/phpdoc-checker"
     ]
 }

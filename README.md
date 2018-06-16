@@ -1,17 +1,21 @@
-# PHP DocBlock Checker
-Check PHP files within a directory for appropriate use of Docblocks.
+# PHPDoc Checker
+
+Check PHP files within a directory for appropriate use of PHPDocs (Docblocks). PHPDoc Checker is fork of 
+[PHP DocBlock Checker](https://github.com/Block8/php-docblock-checker). 
 
 ## Installation
 **Composer**:<br>
-<code>
-composer require block8/php-docblock-checker
-</code>
+
+```bash
+composer require php-censor/phpdoc-checker
+```
 
 ## Usage
 **CMD**:<br>
-<code>
-call vendor/bin/phpdoccheck {params}
-</code>
+
+```bash
+vendor/bin/phpdoccheck {params}
+```
 
 ## Parameters
 
@@ -32,4 +36,5 @@ none | --skip-signatures | Don't check docblocks against method signatures.
 none | --ansi | Force ANSI output.
 none | --no-ansi | Disable ANSI output.
 -n | --no-interaction | Do not ask any interactive question.
--v -vv -vvv | --verbose | Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug.
+-v -vv -vvv | --verbose | Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 
+for debug.

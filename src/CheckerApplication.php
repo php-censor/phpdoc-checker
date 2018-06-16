@@ -1,21 +1,12 @@
 <?php
-/**
- * PHP Docblock Checker
- *
- * @copyright    Copyright 2014, Block 8 Limited.
- * @license      https://github.com/Block8/php-docblock-checker/blob/master/LICENSE.md
- * @link         http://www.phptesting.org/
- */
 
-namespace PhpDocblockChecker;
+namespace PhpDocChecker;
 
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Extension of Symfony's console application class to allow us to have a single, default command.
- * @package PhpDocblockChecker
  */
 class CheckerApplication extends Application
 {
