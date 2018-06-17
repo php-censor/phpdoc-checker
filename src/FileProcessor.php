@@ -5,6 +5,7 @@ namespace PhpDocChecker;
 use PhpParser\Comment\Doc;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\NullableType;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
@@ -93,8 +94,12 @@ class FileProcessor
 
                     $type = $method->returnType;
 
-                    if (!is_null($type)) {
-                        $type = (string)$type;
+                    if (!$method->returnType instanceof NullableType) {
+                        if (!is_null($type)) {
+                            $type = (string)$type;
+                        }
+                    } else {
+                        $type = (string)$type->type;
                     }
 
                     if (isset($uses[$type])) {
@@ -103,6 +108,10 @@ class FileProcessor
 
                     $type = substr($type, 0, 1) == '\\' ? substr($type, 1) : $type;
 
+                    if ($method->returnType instanceof NullableType) {
+                        $type = ['null', $type];
+                        sort($type);
+                    }
 
                     $thisMethod = [
                         'file' => $this->file,
@@ -117,8 +126,12 @@ class FileProcessor
                     foreach ($method->params as $param) {
                         $type = $param->type;
 
-                        if (!is_null($type)) {
-                            $type = (string)$type;
+                        if (!$type instanceof NullableType) {
+                            if (!is_null($type)) {
+                                $type = (string)$type;
+                            }
+                        } else {
+                            $type = (string)$type->type;
                         }
 
                         if (isset($uses[$type])) {
@@ -177,13 +190,14 @@ class FileProcessor
                     $type = (string)$type;
                 }
 
-                if (isset($uses[$type])) {
-                    $type = $uses[$type];
+                $types = [];
+                foreach (explode('|', $type) as $tmpType) {
+                    if (isset($uses[$tmpType])) {
+                        $tmpType = $uses[$tmpType];
+                    }
+                    $types[] = substr($tmpType, 0, 1) == '\\' ? substr($tmpType, 1) : $tmpType;
                 }
-
-                $type = substr($type, 0, 1) == '\\' ? substr($type, 1) : $type;
-
-                $rtn['params'][$param['var']] = $type;
+                $rtn['params'][$param['var']] = implode('|', $types);
             }
         }
 
@@ -196,13 +210,14 @@ class FileProcessor
                 $type = (string)$type;
             }
 
-            if (isset($uses[$type])) {
-                $type = $uses[$type];
+            $types = [];
+            foreach (explode('|', $type) as $tmpType) {
+                if (isset($uses[$tmpType])) {
+                    $tmpType = $uses[$tmpType];
+                }
+                $types[] = substr($tmpType, 0, 1) == '\\' ? substr($tmpType, 1) : $tmpType;
             }
-
-            $type = substr($type, 0, 1) == '\\' ? substr($type, 1) : $type;
-
-            $rtn['return'] = $type;
+            $rtn['return'] = implode('|', $types);
         }
 
         return $rtn;
