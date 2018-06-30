@@ -14,7 +14,7 @@ composer require php-censor/phpdoc-checker
 **CMD**:<br>
 
 ```bash
-vendor/bin/phpdoccheck {params}
+vendor/bin/phpdoc-checker {params}
 ```
 
 ## Parameters
