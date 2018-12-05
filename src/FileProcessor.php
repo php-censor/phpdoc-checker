@@ -114,12 +114,12 @@ class FileProcessor
                     }
 
                     $thisMethod = [
-                        'file' => $this->file,
-                        'class' => $fullClassName,
-                        'name' => $fullMethodName,
-                        'line' => $method->getAttribute('startLine'),
-                        'return' => $type,
-                        'params' => [],
+                        'file'     => $this->file,
+                        'class'    => $fullClassName,
+                        'name'     => (string)$method->name,
+                        'line'     => $method->getAttribute('startLine'),
+                        'return'   => $type,
+                        'params'   => [],
                         'docblock' => $this->getDocblock($method, $uses),
                     ];
 

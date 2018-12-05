@@ -124,8 +124,7 @@ class CheckerCommand extends Command
         $fileCountLength = strlen((string)$totalFiles);
 
         if ($this->verbose) {
-            $output->writeln('');
-            $output->writeln('PHP Docblock Checker <fg=blue>by Dan Cryer (https://www.dancryer.com)</>');
+            $output->writeln('<fg=blue>PHPDoc Checker</>');
             $output->writeln('');
         }
 
@@ -179,7 +178,7 @@ class CheckerCommand extends Command
                     }
 
                     if ($error['type'] == 'method') {
-                        $this->output->write('Method <info>' . $error['method'] . '</info> is missing a docblock.');
+                        $this->output->write('Method <info>' . $error['class'] . '::' . $error['method'] . '</info> is missing a docblock.');
                     }
 
                     $this->output->writeln('');
@@ -191,19 +190,19 @@ class CheckerCommand extends Command
                     $this->output->write('<fg=yellow>WARNING </> ');
 
                     if ($error['type'] == 'param-missing') {
-                        $this->output->write('<info>' . $error['method'] . '</info> - @param <fg=blue>'.$error['param'] . '</> missing.');
+                        $this->output->write('<info>' . $error['class'] . '::' . $error['method'] . '</info> - @param <fg=blue>'.$error['param'] . '</> missing.');
                     }
 
                     if ($error['type'] == 'param-mismatch') {
-                        $this->output->write('<info>' . $error['method'] . '</info> - @param <fg=blue>'.$error['param'] . '</> ('.$error['doc-type'].')  does not match method signature ('.$error['param-type'].').');
+                        $this->output->write('<info>' . $error['class'] . '::' . $error['method'] . '</info> - @param <fg=blue>'.$error['param'] . '</> ('.$error['doc-type'].')  does not match method signature ('.$error['param-type'].').');
                     }
 
                     if ($error['type'] == 'return-missing') {
-                        $this->output->write('<info>' . $error['method'] . '</info> - @return missing.');
+                        $this->output->write('<info>' . $error['class'] . '::' . $error['method'] . '</info> - @return missing.');
                     }
 
                     if ($error['type'] == 'return-mismatch') {
-                        $this->output->write('<info>' . $error['method'] . '</info> - @return <fg=blue>'.$error['doc-type'] . '</>  does not match method signature ('.$error['return-type'].').');
+                        $this->output->write('<info>' . $error['class'] . '::' . $error['method'] . '</info> - @return <fg=blue>'.$error['doc-type'] . '</>  does not match method signature ('.$error['return-type'].').');
                     }
 
                     $this->output->writeln('');
@@ -267,10 +266,10 @@ class CheckerCommand extends Command
                 if (is_null($class['docblock'])) {
                     $errors = true;
                     $this->errors[] = [
-                        'type' => 'class',
-                        'file' => $file,
-                        'class' => $name,
-                        'line' => $class['line'],
+                        'type'  => 'class',
+                        'file'  => $file,
+                        'class' => $class['name'],
+                        'line'  => $class['line'],
                     ];
                 }
             }
@@ -281,11 +280,11 @@ class CheckerCommand extends Command
                 if (is_null($method['docblock'])) {
                     $errors = true;
                     $this->errors[] = [
-                        'type' => 'method',
-                        'file' => $file,
-                        'class' => $name,
-                        'method' => $name,
-                        'line' => $method['line'],
+                        'type'   => 'method',
+                        'file'   => $file,
+                        'class'  => $method['class'],
+                        'method' => $method['name'],
+                        'line'   => $method['line'],
                     ];
                 }
             }
@@ -298,12 +297,12 @@ class CheckerCommand extends Command
                         if (!isset($method['docblock']['params'][$param])) {
                             $warnings = true;
                             $this->warnings[] = [
-                                'type' => 'param-missing',
-                                'file' => $file,
-                                'class' => $name,
-                                'method' => $name,
-                                'line' => $method['line'],
-                                'param' => $param,
+                                'type'   => 'param-missing',
+                                'file'   => $file,
+                                'class'  => $method['class'],
+                                'method' => $method['name'],
+                                'line'   => $method['line'],
+                                'param'  => $param,
                             ];
                         } elseif (!empty($type) && $method['docblock']['params'][$param] != $type) {
                             if ($type == 'array' && substr($method['docblock']['params'][$param], -2) == '[]') {
@@ -311,14 +310,14 @@ class CheckerCommand extends Command
                             } else {
                                 $warnings = true;
                                 $this->warnings[] = [
-                                    'type' => 'param-mismatch',
-                                    'file' => $file,
-                                    'class' => $name,
-                                    'method' => $name,
-                                    'line' => $method['line'],
-                                    'param' => $param,
+                                    'type'       => 'param-mismatch',
+                                    'file'       => $file,
+                                    'class'      => $method['class'],
+                                    'method'     => $method['name'],
+                                    'line'       => $method['line'],
+                                    'param'      => $param,
                                     'param-type' => $type,
-                                    'doc-type' => $method['docblock']['params'][$param],
+                                    'doc-type'   => $method['docblock']['params'][$param],
                                 ];
                             }
                         }
@@ -330,11 +329,11 @@ class CheckerCommand extends Command
                     if (empty($method['docblock']['return'])) {
                         $warnings = true;
                         $this->warnings[] = [
-                            'type' => 'return-missing',
-                            'file' => $file,
-                            'class' => $name,
-                            'method' => $name,
-                            'line' => $method['line'],
+                            'type'   => 'return-missing',
+                            'file'   => $file,
+                            'class'  => $method['class'],
+                            'method' => $method['name'],
+                            'line'   => $method['line'],
                         ];
                     } elseif (is_array($method['return'])) {
                         $docblockTypes = explode('|', $method['docblock']['return']);
@@ -342,13 +341,13 @@ class CheckerCommand extends Command
                         if ($method['return'] != $docblockTypes) {
                             $warnings = true;
                             $this->warnings[] = [
-                                'type' => 'return-mismatch',
-                                'file' => $file,
-                                'class' => $name,
-                                'method' => $name,
-                                'line' => $method['line'],
+                                'type'        => 'return-mismatch',
+                                'file'        => $file,
+                                'class'       => $method['class'],
+                                'method'      => $method['name'],
+                                'line'        => $method['line'],
                                 'return-type' => implode('|', $method['return']),
-                                'doc-type' => $method['docblock']['return'],
+                                'doc-type'    => $method['docblock']['return'],
                             ];
                         }
                     } elseif ($method['docblock']['return'] != $method['return']) {
@@ -357,13 +356,13 @@ class CheckerCommand extends Command
                         } else {
                             $warnings = true;
                             $this->warnings[] = [
-                                'type' => 'return-mismatch',
-                                'file' => $file,
-                                'class' => $name,
-                                'method' => $name,
-                                'line' => $method['line'],
+                                'type'        => 'return-mismatch',
+                                'file'        => $file,
+                                'class'       => $method['class'],
+                                'method'      => $method['name'],
+                                'line'        => $method['line'],
                                 'return-type' => $method['return'],
-                                'doc-type' => $method['docblock']['return'],
+                                'doc-type'    => $method['docblock']['return'],
                             ];
                         }
                     }
