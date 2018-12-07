@@ -92,25 +92,24 @@ class FileProcessor
 
                     $fullMethodName = $fullClassName . '::' . (string)$method->name;
 
-                    $type = $method->returnType;
+                    $returnType = $method->returnType;
 
                     if (!$method->returnType instanceof NullableType) {
-                        if (!is_null($type)) {
-                            $type = (string)$type;
+                        if (!is_null($returnType)) {
+                            $returnType = (string)$returnType;
                         }
                     } else {
-                        $type = (string)$type->type;
+                        $returnType = (string)$returnType->type;
                     }
 
-                    if (isset($uses[$type])) {
-                        $type = $uses[$type];
+                    if (isset($uses[$returnType])) {
+                        $returnType = $uses[$returnType];
                     }
 
-                    $type = substr($type, 0, 1) == '\\' ? substr($type, 1) : $type;
+                    $returnType = substr($returnType, 0, 1) === '\\' ? substr($returnType, 1) : $returnType;
 
                     if ($method->returnType instanceof NullableType) {
-                        $type = ['null', $type];
-                        sort($type);
+                        $returnType = [$returnType, 'null'];
                     }
 
                     $thisMethod = [
@@ -118,29 +117,43 @@ class FileProcessor
                         'class'    => $fullClassName,
                         'name'     => (string)$method->name,
                         'line'     => $method->getAttribute('startLine'),
-                        'return'   => $type,
+                        'return'   => $returnType,
                         'params'   => [],
                         'docblock' => $this->getDocblock($method, $uses),
                     ];
 
                     foreach ($method->params as $param) {
-                        $type = $param->type;
+                        $paramType = $param->type;
 
-                        if (!$type instanceof NullableType) {
-                            if (!is_null($type)) {
-                                $type = (string)$type;
+                        if (!$param->type instanceof NullableType) {
+                            if (!is_null($param->type)) {
+                                $paramType = (string)$paramType;
                             }
                         } else {
-                            $type = (string)$type->type;
+                            $paramType = (string)$paramType->type;
                         }
 
-                        if (isset($uses[$type])) {
-                            $type = $uses[$type];
+                        if (isset($uses[$paramType])) {
+                            $paramType = $uses[$paramType];
                         }
 
-                        $type = substr($type, 0, 1) == '\\' ? substr($type, 1) : $type;
+                        $paramType = substr($paramType, 0, 1) === '\\' ? substr($paramType, 1) : $paramType;
 
-                        $thisMethod['params']['$'.$param->name] = $type;
+                        if (
+                            $param->type instanceof NullableType
+                        ) {
+                            $paramType = [$paramType, 'null'];
+                        } elseif (!empty($param->default->name->parts[0]) && 'null' === $param->default->name->parts[0]) {
+                            if (!is_null($param->type)) {
+                                $paramType = [$paramType, 'null'];
+                            } else {
+                                $paramType = ['<any>', 'null'];
+                            }
+                        }
+
+                        var_dump([$param->default->name->parts[0], $paramType]);
+
+                        $thisMethod['params']['$'.$param->name] = $paramType;
                     }
 
                     $this->methods[$fullMethodName] = $thisMethod;
@@ -195,7 +208,7 @@ class FileProcessor
                     if (isset($uses[$tmpType])) {
                         $tmpType = $uses[$tmpType];
                     }
-                    $types[] = substr($tmpType, 0, 1) == '\\' ? substr($tmpType, 1) : $tmpType;
+                    $types[] = substr($tmpType, 0, 1) === '\\' ? substr($tmpType, 1) : $tmpType;
                 }
                 $rtn['params'][$param['var']] = implode('|', $types);
             }
@@ -215,7 +228,7 @@ class FileProcessor
                 if (isset($uses[$tmpType])) {
                     $tmpType = $uses[$tmpType];
                 }
-                $types[] = substr($tmpType, 0, 1) == '\\' ? substr($tmpType, 1) : $tmpType;
+                $types[] = substr($tmpType, 0, 1) === '\\' ? substr($tmpType, 1) : $tmpType;
             }
             $rtn['return'] = implode('|', $types);
         }

@@ -294,7 +294,7 @@ class CheckerCommand extends Command
             foreach ($processor->getMethods() as $name => $method) {
                 if (count($method['params'])) {
                     foreach ($method['params'] as $param => $type) {
-                        if (!isset($method['docblock']['params'][$param])) {
+                        if (empty($method['docblock']['params'][$param])) {
                             $warnings = true;
                             $this->warnings[] = [
                                 'type'   => 'param-missing',
@@ -304,8 +304,26 @@ class CheckerCommand extends Command
                                 'line'   => $method['line'],
                                 'param'  => $param,
                             ];
-                        } elseif (!empty($type) && $method['docblock']['params'][$param] != $type) {
-                            if ($type == 'array' && substr($method['docblock']['params'][$param], -2) == '[]') {
+                        } elseif (is_array($type)) {
+                            $docblockTypes     = explode('|', $method['docblock']['params'][$param]);
+                            $normalizedType    = $type;
+                            $normalizedType[0] = $docblockTypes[0];
+
+                            if ($normalizedType !== $docblockTypes) {
+                                $warnings = true;
+                                $this->warnings[] = [
+                                    'type'       => 'param-mismatch',
+                                    'file'       => $file,
+                                    'class'      => $method['class'],
+                                    'method'     => $method['name'],
+                                    'line'       => $method['line'],
+                                    'param'      => $param,
+                                    'param-type' => implode('|', $type),
+                                    'doc-type'   => $method['docblock']['params'][$param],
+                                ];
+                            }
+                        } elseif (!empty($type) && $method['docblock']['params'][$param] !== $type) {
+                            if ($type === 'array' && substr($method['docblock']['params'][$param], -2) === '[]') {
                                 // Do nothing because this is fine.
                             } else {
                                 $warnings = true;
@@ -337,8 +355,7 @@ class CheckerCommand extends Command
                         ];
                     } elseif (is_array($method['return'])) {
                         $docblockTypes = explode('|', $method['docblock']['return']);
-                        sort($docblockTypes);
-                        if ($method['return'] != $docblockTypes) {
+                        if ($method['return'] !== $docblockTypes) {
                             $warnings = true;
                             $this->warnings[] = [
                                 'type'        => 'return-mismatch',
@@ -350,8 +367,8 @@ class CheckerCommand extends Command
                                 'doc-type'    => $method['docblock']['return'],
                             ];
                         }
-                    } elseif ($method['docblock']['return'] != $method['return']) {
-                        if ($method['return'] == 'array' && substr($method['docblock']['return'], -2) == '[]') {
+                    } elseif ($method['docblock']['return'] !== $method['return']) {
+                        if ($method['return'] === 'array' && substr($method['docblock']['return'], -2) === '[]') {
                             // Do nothing because this is fine.
                         } else {
                             $warnings = true;
