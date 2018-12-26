@@ -151,8 +151,6 @@ class FileProcessor
                             }
                         }
 
-                        var_dump([$param->default->name->parts[0], $paramType]);
-
                         $thisMethod['params']['$'.$param->name] = $paramType;
                     }
 
