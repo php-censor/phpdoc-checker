@@ -131,11 +131,16 @@ class DocBlockParser
                     }
                     // Default the trailing values
                     $parts = array_pad($parts, $count, null);
-                    // Store as a mapped array
-                    $this->tags[$tag][] = array_combine(
+                    $mapped = array_combine(
                         self::$vectors[$tag],
                         $parts
                     );
+
+                    if (isset($mapped['var']) && substr( $mapped['var'], 0, 3) === '...') {
+                        $mapped['var'] = substr($mapped['var'], 3);
+                    }
+                    // Store as a mapped array
+                    $this->tags[$tag][] = $mapped;
                 }
                 else {
                     // The tagged block is only text
