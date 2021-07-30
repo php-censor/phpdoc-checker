@@ -378,6 +378,7 @@ class CheckerCommand extends Command
                         if (
                             ($method['return'] === 'array' && substr($method['docblock']['return'], -2) === '[]')
                             || $method['docblock']['return'] === 'mixed'
+                            || (strpos($method['docblock']['return'], '|') !== false && PHP_MAJOR_VERSION < 8)
                         ) {
                             // Do nothing because this is fine.
                         } else {
