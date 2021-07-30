@@ -194,7 +194,7 @@ class CheckerCommand extends Command
                     }
 
                     if ($error['type'] == 'param-mismatch') {
-                        $this->output->write('<info>' . $error['class'] . '::' . $error['method'] . '</info> - @param <fg=blue>'.$error['param'] . '</> ('.$error['doc-type'].')  does not match method signature ('.$error['param-type'].').');
+                        $this->output->write('<info>' . $error['class'] . '::' . $error['method'] . '</info> - @param <fg=blue>'.$error['param'] . '</> ('.$error['doc-type'].') does not match method signature ('.$error['param-type'].').');
                     }
 
                     if ($error['type'] == 'return-missing') {
@@ -202,7 +202,7 @@ class CheckerCommand extends Command
                     }
 
                     if ($error['type'] == 'return-mismatch') {
-                        $this->output->write('<info>' . $error['class'] . '::' . $error['method'] . '</info> - @return <fg=blue>'.$error['doc-type'] . '</>  does not match method signature ('.$error['return-type'].').');
+                        $this->output->write('<info>' . $error['class'] . '::' . $error['method'] . '</info> - @return <fg=blue>'.$error['doc-type'] . '</> does not match method signature ('.$error['return-type'].').');
                     }
 
                     $this->output->writeln('');
@@ -323,7 +323,10 @@ class CheckerCommand extends Command
                                 ];
                             }
                         } elseif (!empty($type) && $method['docblock']['params'][$param] !== $type) {
-                            if ($type === 'array' && substr($method['docblock']['params'][$param], -2) === '[]') {
+                            if (
+                                ($type === 'array' && substr($method['docblock']['params'][$param], -2) === '[]')
+                                || $method['docblock']['params'][$param] === 'mixed'
+                            ) {
                                 // Do nothing because this is fine.
                             } else {
                                 $warnings = true;
@@ -345,6 +348,10 @@ class CheckerCommand extends Command
 
                 if (!empty($method['return'])) {
                     if (empty($method['docblock']['return'])) {
+                        // https://bugs.php.net/bug.php?id=75263
+                        if ($method['name'] === '__construct') {
+                            continue;
+                        }
                         $warnings = true;
                         $this->warnings[] = [
                             'type'   => 'return-missing',
@@ -368,7 +375,10 @@ class CheckerCommand extends Command
                             ];
                         }
                     } elseif ($method['docblock']['return'] !== $method['return']) {
-                        if ($method['return'] === 'array' && substr($method['docblock']['return'], -2) === '[]') {
+                        if (
+                            ($method['return'] === 'array' && substr($method['docblock']['return'], -2) === '[]')
+                            || $method['docblock']['return'] === 'mixed'
+                        ) {
                             // Do nothing because this is fine.
                         } else {
                             $warnings = true;
