@@ -70,7 +70,12 @@ class FileProcessor
 
             if ($statement instanceof Use_) {
                 foreach ($statement->uses as $use) {
-                    $uses[$use->alias] = (string)$use->name;
+                    $name = (string)$use->name;
+                    if (is_null($use->alias)) {
+                        $uses[$name] = $name;
+                    } else {
+                        $uses[(string) $use->alias] = $name;
+                    }
                 }
             }
 
@@ -151,7 +156,7 @@ class FileProcessor
                             }
                         }
 
-                        $thisMethod['params']['$'.$param->name] = $paramType;
+                        $thisMethod['params']['$'.$param->var->name] = $paramType;
                     }
 
                     $this->methods[$fullMethodName] = $thisMethod;
