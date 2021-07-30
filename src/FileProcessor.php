@@ -70,12 +70,7 @@ class FileProcessor
 
             if ($statement instanceof Use_) {
                 foreach ($statement->uses as $use) {
-                    $name = (string)$use->name;
-                    if (is_null($use->alias)) {
-                        $uses[$name] = $name;
-                    } else {
-                        $uses[(string) $use->alias] = $name;
-                    }
+                    $uses[(string) $use->alias] = (string)$use->name;
                 }
             }
 
