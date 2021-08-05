@@ -1,0 +1,11 @@
+*.php text eol=lf
+
+*.png binary
+*.jpg binary
+
+/tests/ export-ignore
+
+/.editorconfig       export-ignore
+/.gitattributes      export-ignore
+/.gitignore          export-ignore
+/.php-censor.yml     export-ignore
