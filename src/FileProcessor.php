@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace PhpDocChecker;
 
 use PhpParser\Comment\Doc;
@@ -22,9 +24,10 @@ class FileProcessor
 
     /**
      * Load and parse a PHP file.
+     *
      * @param string $file
      */
-    public function __construct($file)
+    public function __construct(string $file)
     {
         $this->file = $file;
 
@@ -37,29 +40,33 @@ class FileProcessor
 
     /**
      * Return a list of class details from the given PHP file.
+     *
      * @return array
      */
-    public function getClasses()
+    public function getClasses(): array
     {
         return $this->classes;
     }
 
     /**
      * Return a list of method details from the given PHP file.
+     *
      * @return array
      */
-    public function getMethods()
+    public function getMethods(): array
     {
         return $this->methods;
     }
 
     /**
      * Looks for class definitions, and then within them method definitions, docblocks, etc.
-     * @param array $statements
+     *
+     * @param array  $statements
      * @param string $prefix
+     *
      * @return mixed
      */
-    protected function processStatements(array $statements, $prefix = '')
+    protected function processStatements(array $statements, string $prefix = '')
     {
         $uses = [];
 
@@ -95,7 +102,7 @@ class FileProcessor
                     $returnType = $method->returnType;
 
                     if (!$method->returnType instanceof NullableType) {
-                        if (!is_null($returnType)) {
+                        if (!\is_null($returnType)) {
                             $returnType = (string)$returnType;
                         }
                     } else {
@@ -106,7 +113,7 @@ class FileProcessor
                         $returnType = $uses[$returnType];
                     }
 
-                    $returnType = substr($returnType, 0, 1) === '\\' ? substr($returnType, 1) : $returnType;
+                    $returnType = \substr((string)$returnType, 0, 1) === '\\' ? \substr((string)$returnType, 1) : $returnType;
 
                     if ($method->returnType instanceof NullableType) {
                         $returnType = [$returnType, 'null'];
@@ -126,7 +133,7 @@ class FileProcessor
                         $paramType = $param->type;
 
                         if (!$param->type instanceof NullableType) {
-                            if (!is_null($param->type)) {
+                            if (!\is_null($param->type)) {
                                 $paramType = (string)$paramType;
                             }
                         } else {
@@ -137,14 +144,14 @@ class FileProcessor
                             $paramType = $uses[$paramType];
                         }
 
-                        $paramType = substr($paramType, 0, 1) === '\\' ? substr($paramType, 1) : $paramType;
+                        $paramType = \substr((string)$paramType, 0, 1) === '\\' ? \substr((string)$paramType, 1) : $paramType;
 
                         if (
                             $param->type instanceof NullableType
                         ) {
                             $paramType = [$paramType, 'null'];
                         } elseif (!empty($param->default->name->parts[0]) && 'null' === $param->default->name->parts[0]) {
-                            if (!is_null($param->type)) {
+                            if (!\is_null($param->type)) {
                                 $paramType = [$paramType, 'null'];
                             } else {
                                 $paramType = ['<any>', 'null'];
@@ -158,19 +165,23 @@ class FileProcessor
                 }
             }
         }
+
+        return;
     }
 
     /**
      * Find and parse a docblock for a given class or method.
-     * @param Stmt $stmt
+     *
+     * @param Stmt  $stmt
      * @param array $uses
+     *
      * @return array|null
      */
-    protected function getDocblock(Stmt $stmt, array $uses = [])
+    protected function getDocblock(Stmt $stmt, array $uses = []): ?array
     {
         $comments = $stmt->getAttribute('comments');
 
-        if (is_array($comments)) {
+        if (\is_array($comments)) {
             foreach ($comments as $comment) {
                 if ($comment instanceof Doc) {
                     return $this->processDocblock($comment->getText(), $uses);
@@ -183,11 +194,13 @@ class FileProcessor
 
     /**
      * Use Paul Scott's docblock parser to parse a docblock, then return the relevant parts.
+     *
      * @param string $text
-     * @param array $uses
+     * @param array  $uses
+     *
      * @return array
      */
-    protected function processDocblock($text, array $uses = [])
+    protected function processDocblock(string $text, array $uses = []): array
     {
         $parser = new DocBlockParser($text);
 
@@ -202,33 +215,33 @@ class FileProcessor
                 }
 
                 $types = [];
-                foreach (explode('|', $type) as $tmpType) {
+                foreach (\explode('|', $type) as $tmpType) {
                     if (isset($uses[$tmpType])) {
                         $tmpType = $uses[$tmpType];
                     }
-                    $types[] = substr($tmpType, 0, 1) === '\\' ? substr($tmpType, 1) : $tmpType;
+                    $types[] = \substr($tmpType, 0, 1) === '\\' ? \substr($tmpType, 1) : $tmpType;
                 }
-                $rtn['params'][$param['var']] = implode('|', $types);
+                $rtn['params'][$param['var']] = \implode('|', $types);
             }
         }
 
         if (isset($parser->tags['return'])) {
-            $return = array_shift($parser->tags['return']);
+            $return = \array_shift($parser->tags['return']);
 
             $type = $return['type'];
 
-            if (!is_null($type)) {
+            if (!\is_null($type)) {
                 $type = (string)$type;
             }
 
             $types = [];
-            foreach (explode('|', $type) as $tmpType) {
+            foreach (\explode('|', $type) as $tmpType) {
                 if (isset($uses[$tmpType])) {
                     $tmpType = $uses[$tmpType];
                 }
-                $types[] = substr($tmpType, 0, 1) === '\\' ? substr($tmpType, 1) : $tmpType;
+                $types[] = \substr($tmpType, 0, 1) === '\\' ? \substr($tmpType, 1) : $tmpType;
             }
-            $rtn['return'] = implode('|', $types);
+            $rtn['return'] = \implode('|', $types);
         }
 
         return $rtn;

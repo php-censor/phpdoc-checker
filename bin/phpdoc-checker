@@ -1,6 +1,6 @@
 #!/usr/bin/env php
+<?php declare(strict_types = 1);
 
-<?php
 /**
  * PHP Docblock Checker
  *
@@ -9,12 +9,12 @@
  * @link         http://www.phptesting.org/
  */
 
-$ownVendorAutoloader    = dirname(__DIR__) . '/vendor/autoload.php';
-$parentVendorAutoloader = dirname(__DIR__) . '/../../autoload.php';
+$ownVendorAutoloader    = \dirname(__DIR__) . '/vendor/autoload.php';
+$parentVendorAutoloader = \dirname(__DIR__) . '/../../autoload.php';
 
-if (file_exists($ownVendorAutoloader)) {
+if (\file_exists($ownVendorAutoloader)) {
     require_once($ownVendorAutoloader);
-} elseif (file_exists($parentVendorAutoloader)) {
+} elseif (\file_exists($parentVendorAutoloader)) {
     require_once($parentVendorAutoloader);
 }
 
@@ -22,4 +22,5 @@ $command = new PhpDocChecker\CheckerCommand();
 
 $application = new PhpDocChecker\CheckerApplication('PHP Docblock Checker', '@package_version@');
 $application->add($command);
+
 $application->run();

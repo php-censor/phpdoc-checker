@@ -32,8 +32,9 @@
     "require": {
         "php":              ">=7.1.0",
         "ext-json":         "*",
-        "nikic/php-parser": "^4.2",
-        "symfony/console":  "^4.3"
+        "ext-ctype":        "*",
+        "nikic/php-parser": "^4.12",
+        "symfony/console":  "^4.4"
     },
     "bin": [
         "bin/phpdoc-checker"

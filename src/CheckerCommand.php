@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace PhpDocChecker;
 
 use DirectoryIterator;
@@ -66,7 +68,7 @@ class CheckerCommand extends Command
     /**
      * Configure the console command, add options, etc.
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('check')
@@ -84,31 +86,32 @@ class CheckerCommand extends Command
 
     /**
      * Execute the actual docblock checker.
+     *
      * @param InputInterface $input
      * @param OutputInterface $output
+     *
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // Process options:
-        $exclude = $input->getOption('exclude');
-        $json = $input->getOption('json');
-        $this->basePath = $input->getOption('directory');
-        $this->verbose = !$json;
-        $this->output = $output;
-        $this->skipClasses = $input->getOption('skip-classes');
-        $this->skipMethods = $input->getOption('skip-methods');
+        $exclude              = $input->getOption('exclude');
+        $json                 = $input->getOption('json');
+        $this->basePath       = $input->getOption('directory');
+        $this->verbose        = !$json;
+        $this->output         = $output;
+        $this->skipClasses    = $input->getOption('skip-classes');
+        $this->skipMethods    = $input->getOption('skip-methods');
         $this->skipSignatures = $input->getOption('skip-signatures');
-        $failOnWarnings = $input->getOption('fail-on-warnings');
-        $startTime = microtime(true);
+        $failOnWarnings       = $input->getOption('fail-on-warnings');
+        $startTime            = \microtime(true);
 
         // Set up excludes:
-        if (!is_null($exclude)) {
-            $this->exclude = array_map('trim', explode(',', $exclude));
+        if (!\is_null($exclude)) {
+            $this->exclude = \array_map('trim', \explode(',', $exclude));
         }
 
         // Check base path ends with a slash:
-        if (substr($this->basePath, -1) != '/') {
+        if (\substr($this->basePath, -1) != '/') {
             $this->basePath .= '/';
         }
 
@@ -118,23 +121,23 @@ class CheckerCommand extends Command
 
         // Check files:
         $filesPerLine = (int)$input->getOption('files-per-line');
-        $totalFiles = count($files);
-        $files = array_chunk($files, $filesPerLine);
+        $totalFiles = \count($files);
+        $files = \array_chunk($files, $filesPerLine);
         $processed = 0;
-        $fileCountLength = strlen((string)$totalFiles);
+        $fileCountLength = \strlen((string)$totalFiles);
 
         if ($this->verbose) {
             $output->writeln('<fg=blue>PHPDoc Checker</>');
             $output->writeln('');
         }
 
-        while (count($files)) {
-            $chunk = array_shift($files);
-            $chunkFiles = count($chunk);
+        while (\count($files)) {
+            $chunk = \array_shift($files);
+            $chunkFiles = \count($chunk);
 
-            while (count($chunk)) {
+            while (\count($chunk)) {
                 $processed++;
-                $file = array_shift($chunk);
+                $file = \array_shift($chunk);
 
                 list($errors, $warnings) = $this->processFile($file);
 
@@ -150,23 +153,23 @@ class CheckerCommand extends Command
             }
 
             if ($this->verbose) {
-                $this->output->write(str_pad('', $filesPerLine - $chunkFiles));
-                $this->output->writeln('  ' . str_pad($processed, $fileCountLength, ' ', STR_PAD_LEFT) . '/' . $totalFiles . ' (' . floor((100/$totalFiles) * $processed) . '%)');
+                $this->output->write(\str_pad('', $filesPerLine - $chunkFiles));
+                $this->output->writeln('  ' . \str_pad((string)$processed, $fileCountLength, ' ', STR_PAD_LEFT) . '/' . $totalFiles . ' (' . \floor((100/$totalFiles) * $processed) . '%)');
             }
         }
 
         if ($this->verbose) {
-            $time = round(microtime(true) - $startTime, 2);
+            $time = \round(\microtime(true) - $startTime, 2);
             $this->output->writeln('');
             $this->output->writeln('');
-            $this->output->writeln('Checked ' . number_format($totalFiles) . ' files in ' . $time . ' seconds.');
-            $this->output->write('<info>' . number_format($this->passed) . ' Passed</info>');
-            $this->output->write(' / <fg=red>'.number_format(count($this->errors)).' Errors</>');
-            $this->output->write(' / <fg=yellow>'.number_format(count($this->warnings)).' Warnings</>');
+            $this->output->writeln('Checked ' . \number_format($totalFiles) . ' files in ' . $time . ' seconds.');
+            $this->output->write('<info>' . \number_format($this->passed) . ' Passed</info>');
+            $this->output->write(' / <fg=red>' . \number_format(\count($this->errors)) . ' Errors</>');
+            $this->output->write(' / <fg=yellow>' . \number_format(\count($this->warnings)) . ' Warnings</>');
 
             $this->output->writeln('');
 
-            if (count($this->errors) && !$input->getOption('info-only')) {
+            if (\count($this->errors) && !$input->getOption('info-only')) {
                 $this->output->writeln('');
                 $this->output->writeln('');
 
@@ -185,7 +188,7 @@ class CheckerCommand extends Command
                 }
             }
 
-            if (count($this->warnings) && !$input->getOption('info-only')) {
+            if (\count($this->warnings) && !$input->getOption('info-only')) {
                 foreach ($this->warnings as $error) {
                     $this->output->write('<fg=yellow>WARNING </> ');
 
@@ -214,18 +217,19 @@ class CheckerCommand extends Command
 
         // Output JSON if requested:
         if ($json) {
-            print json_encode(array_merge($this->errors, $this->warnings));
+            print \json_encode(\array_merge($this->errors, $this->warnings));
         }
 
-        return count($this->errors) || ($failOnWarnings && count($this->warnings)) ? 1 : 0;
+        return \count($this->errors) || ($failOnWarnings && \count($this->warnings)) ? 1 : 0;
     }
 
     /**
      * Iterate through a directory and check all of the PHP files within it.
+     *
      * @param string $path
-     * @param string[] $worklist
+     * @param string[] $workList
      */
-    protected function processDirectory($path = '', array &$worklist = [])
+    protected function processDirectory(string $path = '', array &$workList = []): void
     {
         $dir = new DirectoryIterator($this->basePath . $path);
 
@@ -236,34 +240,36 @@ class CheckerCommand extends Command
 
             $itemPath = $path . $item->getFilename();
 
-            if (in_array($itemPath, $this->exclude)) {
+            if (\in_array($itemPath, $this->exclude)) {
                 continue;
             }
 
             if ($item->isFile() && $item->getExtension() == 'php') {
-                $worklist[] = $itemPath;
+                $workList[] = $itemPath;
             }
 
             if ($item->isDir()) {
-                $this->processDirectory($itemPath . '/', $worklist);
+                $this->processDirectory($itemPath . '/', $workList);
             }
         }
     }
 
     /**
      * Check a specific PHP file for errors.
+     *
      * @param string $file
+     *
      * @return array
      */
-    protected function processFile($file)
+    protected function processFile(string $file): array
     {
-        $errors = false;
-        $warnings = false;
+        $errors    = false;
+        $warnings  = false;
         $processor = new FileProcessor($this->basePath . $file);
 
         if (!$this->skipClasses) {
             foreach ($processor->getClasses() as $name => $class) {
-                if (is_null($class['docblock'])) {
+                if (\is_null($class['docblock'])) {
                     $errors = true;
                     $this->errors[] = [
                         'type'  => 'class',
@@ -277,7 +283,7 @@ class CheckerCommand extends Command
 
         if (!$this->skipMethods) {
             foreach ($processor->getMethods() as $name => $method) {
-                if (is_null($method['docblock'])) {
+                if (\is_null($method['docblock'])) {
                     $errors = true;
                     $this->errors[] = [
                         'type'   => 'method',
@@ -292,7 +298,7 @@ class CheckerCommand extends Command
 
         if (!$this->skipSignatures) {
             foreach ($processor->getMethods() as $name => $method) {
-                if (count($method['params'])) {
+                if (\count($method['params'])) {
                     foreach ($method['params'] as $param => $type) {
                         if (empty($method['docblock']['params'][$param])) {
                             $warnings = true;
@@ -304,8 +310,8 @@ class CheckerCommand extends Command
                                 'line'   => $method['line'],
                                 'param'  => $param,
                             ];
-                        } elseif (is_array($type)) {
-                            $docblockTypes     = explode('|', $method['docblock']['params'][$param]);
+                        } elseif (\is_array($type)) {
+                            $docblockTypes     = \explode('|', $method['docblock']['params'][$param]);
                             $normalizedType    = $type;
                             $normalizedType[0] = $docblockTypes[0];
 
@@ -318,13 +324,13 @@ class CheckerCommand extends Command
                                     'method'     => $method['name'],
                                     'line'       => $method['line'],
                                     'param'      => $param,
-                                    'param-type' => implode('|', $type),
+                                    'param-type' => \implode('|', $type),
                                     'doc-type'   => $method['docblock']['params'][$param],
                                 ];
                             }
                         } elseif (!empty($type) && $method['docblock']['params'][$param] !== $type) {
                             if (
-                                ($type === 'array' && substr($method['docblock']['params'][$param], -2) === '[]')
+                                ($type === 'array' && \substr($method['docblock']['params'][$param], -2) === '[]')
                                 || $method['docblock']['params'][$param] === 'mixed'
                             ) {
                                 // Do nothing because this is fine.
@@ -360,8 +366,8 @@ class CheckerCommand extends Command
                             'method' => $method['name'],
                             'line'   => $method['line'],
                         ];
-                    } elseif (is_array($method['return'])) {
-                        $docblockTypes = explode('|', $method['docblock']['return']);
+                    } elseif (\is_array($method['return'])) {
+                        $docblockTypes = \explode('|', $method['docblock']['return']);
                         if ($method['return'] !== $docblockTypes) {
                             $warnings = true;
                             $this->warnings[] = [
@@ -370,15 +376,15 @@ class CheckerCommand extends Command
                                 'class'       => $method['class'],
                                 'method'      => $method['name'],
                                 'line'        => $method['line'],
-                                'return-type' => implode('|', $method['return']),
+                                'return-type' => \implode('|', $method['return']),
                                 'doc-type'    => $method['docblock']['return'],
                             ];
                         }
                     } elseif ($method['docblock']['return'] !== $method['return']) {
                         if (
-                            ($method['return'] === 'array' && substr($method['docblock']['return'], -2) === '[]')
+                            ($method['return'] === 'array' && \substr($method['docblock']['return'], -2) === '[]')
                             || $method['docblock']['return'] === 'mixed'
-                            || (strpos($method['docblock']['return'], '|') !== false && PHP_MAJOR_VERSION < 8)
+                            || (\strpos($method['docblock']['return'], '|') !== false && PHP_MAJOR_VERSION < 8)
                         ) {
                             // Do nothing because this is fine.
                         } else {
