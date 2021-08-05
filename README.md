@@ -10,6 +10,12 @@ Check PHP files within a directory for appropriate use of PHPDocs (Docblocks). P
 composer require php-censor/phpdoc-checker
 ```
 
+## Building Phar Package
+
+```bash
+box.phar compile
+```
+
 ## Usage
 **CMD**:<br>
 
@@ -17,7 +23,7 @@ composer require php-censor/phpdoc-checker
 vendor/bin/phpdoc-checker {params}
 ```
 
-## Parameters
+### Parameters
 
 Short | Long | Description
 ------------ | ------------- | -----------
