@@ -1,2 +1,4 @@
-vendor
-phpdoc-checker.phar
+/vendor
+/composer.phar
+/phpdoc-checker.phar
+/.php_cs.cache
