@@ -2,11 +2,10 @@
 <?php declare(strict_types = 1);
 
 /**
- * PHP Docblock Checker
+ * @package PHPDoc Checker
  *
- * @copyright    Copyright 2014, Block 8 Limited.
- * @license      https://github.com/Block8/php-docblock-checker/blob/master/LICENSE.md
- * @link         http://www.phptesting.org/
+ * @author Dmitry Khomutov <poisoncorpsee@gmail.com>
+ * @author Dan Cryer <dan@block8.co.uk>
  */
 
 $ownVendorAutoloader    = \dirname(__DIR__) . '/vendor/autoload.php';

@@ -7,9 +7,11 @@ namespace PhpDocChecker;
 /**
  * Parse the docblock of a function or method
  *
- * @author Paul Scott <paul@duedil.com>
+ * @package PHPDoc Checker
  *
- * {@link http://www.github.com/icio/PHP-DocBlock-Parser}
+ * @author Dmitry Khomutov <poisoncorpsee@gmail.com>
+ * @author Dan Cryer <dan@block8.co.uk>
+ * @author Paul Scott <paul@duedil.com> (http://www.github.com/icio/PHP-DocBlock-Parser)
  */
 class DocBlockParser
 {

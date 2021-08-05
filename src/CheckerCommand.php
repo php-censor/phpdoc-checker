@@ -13,6 +13,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Console command to check a directory of PHP files for Docblocks.
  *
+ * @package PHPDoc Checker
+ *
+ * @author Dmitry Khomutov <poisoncorpsee@gmail.com>
  * @author Dan Cryer <dan@block8.co.uk>
  */
 class CheckerCommand extends Command

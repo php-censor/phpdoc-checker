@@ -10,6 +10,11 @@ use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Extension of Symfony's console application class to allow us to have a single, default command.
+ *
+ * @package PHPDoc Checker
+ *
+ * @author Dmitry Khomutov <poisoncorpsee@gmail.com>
+ * @author Dan Cryer <dan@block8.co.uk>
  */
 class CheckerApplication extends Application
 {

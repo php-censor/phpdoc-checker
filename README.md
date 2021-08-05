@@ -43,3 +43,7 @@ none | --ansi | Force ANSI output.
 none | --no-ansi | Disable ANSI output.
 -n | --no-interaction | Do not ask any interactive question.
 -v -vv -vvv | --verbose | Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug.
+
+## License
+
+PHPDoc Checker is open source software licensed under the [BSD-2-Clause license](LICENSE).

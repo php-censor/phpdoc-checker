@@ -15,6 +15,11 @@ use PhpParser\ParserFactory;
 
 /**
  * Uses Nikic/PhpParser to parse PHP files and find relevant information for the checker.
+ *
+ * @package PHPDoc Checker
+ *
+ * @author Dmitry Khomutov <poisoncorpsee@gmail.com>
+ * @author Dan Cryer <dan@block8.co.uk>
  */
 class FileProcessor
 {
