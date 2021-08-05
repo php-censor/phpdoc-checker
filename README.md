@@ -17,7 +17,6 @@ box.phar compile
 ```
 
 ## Usage
-**CMD**:<br>
 
 ```bash
 vendor/bin/phpdoc-checker {params}
