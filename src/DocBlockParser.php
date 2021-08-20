@@ -128,7 +128,7 @@ class DocBlockParser
             else
             {
                 // This block is tagged
-                $tag  = \substr(self::strTag($body), 1);
+                $tag  = (string)\substr(self::strTag($body), 1);
                 $body = \ltrim((string)\substr($body, \strlen($tag) + 2));
 
                 if (isset(self::$vectors[$tag])) {
@@ -226,14 +226,14 @@ class DocBlockParser
      *
      * @param string $str
      *
-     * @return string|null
+     * @return string
      */
-    public static function strTag(string $str): ?string
+    public static function strTag(string $str): string
     {
         if (\preg_match('/^@[a-z0-9_]+/', $str, $matches)) {
-            return $matches[0];
+            return (string)$matches[0];
         }
 
-        return null;
+        return '';
     }
 }
