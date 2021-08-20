@@ -22,7 +22,7 @@ class DocBlockParser
      *
      * @type array
      */
-    public static $vectors = [
+    public static array $vectors = [
         'param'  => ['type', 'var', 'desc'],
         'return' => ['type', 'desc'],
     ];
@@ -32,7 +32,7 @@ class DocBlockParser
      *
      * @type string
      */
-    public $desc;
+    public string $description;
 
     /**
      * The tags defined in the docblock.
@@ -46,14 +46,14 @@ class DocBlockParser
      *
      * @type array
      */
-    public $tags;
+    public array $tags;
 
     /**
      * The entire DocBlock comment that was parsed.
      *
-     * @type String
+     * @type string
      */
-    public $comment;
+    public string $comment;
 
     /**
      * CONSTRUCTOR.
@@ -74,9 +74,9 @@ class DocBlockParser
      */
     public function setComment(string $comment): void
     {
-        $this->desc    = '';
-        $this->tags    = [];
-        $this->comment = $comment;
+        $this->description = '';
+        $this->tags        = [];
+        $this->comment     = $comment;
 
         $this->parseComment($comment);
     }
@@ -102,8 +102,7 @@ class DocBlockParser
         // Group the lines together by @tags
         $blocks = [];
         $b = -1;
-        foreach ($comment as $line)
-        {
+        foreach ($comment as $line) {
             if (self::isTagged($line)) {
                 $b++;
                 $blocks[] = [];
@@ -115,18 +114,14 @@ class DocBlockParser
         }
 
         // Parse the blocks
-        foreach ($blocks as $block => $body)
-        {
+        foreach ($blocks as $block => $body) {
             $body = \trim(\implode("\n", $body));
 
-            if ($block == 0 && !self::isTagged($body))
-            {
+            if ($block == 0 && !self::isTagged($body)) {
                 // This is the description block
-                $this->desc = $body;
+                $this->description = $body;
                 continue;
-            }
-            else
-            {
+            } else {
                 // This block is tagged
                 $tag  = (string)\substr(self::strTag($body), 1);
                 $body = \ltrim((string)\substr($body, \strlen($tag) + 2));
@@ -151,8 +146,7 @@ class DocBlockParser
                     }
                     // Store as a mapped array
                     $this->tags[$tag][] = $mapped;
-                }
-                else {
+                } else {
                     // The tagged block is only text
                     $this->tags[$tag][] = $body;
                 }

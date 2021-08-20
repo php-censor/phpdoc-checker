@@ -20,43 +20,21 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CheckerCommand extends Command
 {
-    /**
-     * @var string
-     */
-    protected $basePath = './';
+    protected string $basePath = './';
 
-    /**
-     * @var bool
-     */
-    protected $verbose = true;
+    protected bool $verbose = true;
 
-    /**
-     * @var array
-     */
-    protected $errors = [];
+    protected array $errors = [];
 
-    /**
-     * @var array
-     */
-    protected $warnings = [];
+    protected array $warnings = [];
 
-    /**
-     * @var array
-     */
-    protected $exclude = [];
+    protected array $exclude = [];
 
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
+    protected OutputInterface $output;
 
-    /** @var int */
-    protected $passed = 0;
+    protected int $passed = 0;
 
-    /**
-     * @var CheckerFileProcessor
-     */
-    protected $checkerFileProcessor;
+    protected CheckerFileProcessor $checkerFileProcessor;
 
     /**
      * Configure the console command, add options, etc.
@@ -121,10 +99,10 @@ class CheckerCommand extends Command
         $this->processDirectory('', $files);
 
         // Check files:
-        $filesPerLine = (int)$input->getOption('files-per-line');
-        $totalFiles = \count($files);
-        $files = \array_chunk($files, $filesPerLine);
-        $processed = 0;
+        $filesPerLine    = (int)$input->getOption('files-per-line');
+        $totalFiles      = \count($files);
+        $files           = \array_chunk($files, $filesPerLine);
+        $processed       = 0;
         $fileCountLength = \strlen((string)$totalFiles);
 
         if ($this->verbose) {
@@ -133,7 +111,7 @@ class CheckerCommand extends Command
         }
 
         while (\count($files)) {
-            $chunk = \array_shift($files);
+            $chunk      = \array_shift($files);
             $chunkFiles = \count($chunk);
 
             while (\count($chunk)) {
