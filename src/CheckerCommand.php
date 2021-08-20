@@ -314,9 +314,15 @@ class CheckerCommand extends Command
                                 'param'  => $param,
                             ];
                         } elseif (\is_array($type)) {
-                            $docblockTypes     = \explode('|', $method['docblock']['params'][$param]);
+                            $docblockTypes     = (array)\explode('|', $method['docblock']['params'][$param]);
                             $normalizedType    = $type;
-                            $normalizedType[0] = $docblockTypes[0];
+
+                            if (!$type && $docblockTypes) {
+                                continue;
+                            }
+
+                            \sort($docblockTypes, SORT_STRING);
+                            \sort($normalizedType, SORT_STRING);
 
                             if ($normalizedType !== $docblockTypes) {
                                 $warnings = true;
@@ -370,7 +376,11 @@ class CheckerCommand extends Command
                             'line'   => $method['line'],
                         ];
                     } elseif (\is_array($method['return'])) {
-                        $docblockTypes = \explode('|', $method['docblock']['return']);
+                        $docblockTypes = (array)\explode('|', $method['docblock']['return']);
+
+                        \sort($docblockTypes, SORT_STRING);
+                        \sort($method['return'], SORT_STRING);
+
                         if ($method['return'] !== $docblockTypes) {
                             $warnings = true;
                             $this->warnings[] = [

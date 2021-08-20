@@ -11,6 +11,7 @@ use PhpParser\Node\NullableType;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
+use PhpParser\Node\UnionType;
 use PhpParser\ParserFactory;
 
 /**
@@ -74,7 +75,6 @@ class FileProcessor
     protected function processStatements(array $statements, string $prefix = '')
     {
         $uses = [];
-
         foreach ($statements as $statement) {
             if ($statement instanceof Namespace_) {
                 return $this->processStatements($statement->stmts, (string)$statement->name);
@@ -82,7 +82,7 @@ class FileProcessor
 
             if ($statement instanceof Use_) {
                 foreach ($statement->uses as $use) {
-                    $uses[(string) $use->alias] = (string)$use->name;
+                    $uses[(string)$use->alias] = (string)$use->name;
                 }
             }
 
@@ -102,26 +102,37 @@ class FileProcessor
                         continue;
                     }
 
-                    $fullMethodName = $fullClassName . '::' . (string)$method->name;
+                    $fullMethodName = $fullClassName . '::' . $method->name;
 
                     $returnType = $method->returnType;
-
-                    if (!$method->returnType instanceof NullableType) {
+                    if ($method->returnType instanceof NullableType) {
+                        $returnType = [$returnType->type, 'null'];
+                    } elseif ($method->returnType instanceof UnionType) {
+                        $returnType = $returnType->types;
+                    } else {
                         if (!\is_null($returnType)) {
                             $returnType = (string)$returnType;
                         }
-                    } else {
-                        $returnType = (string)$returnType->type;
                     }
 
-                    if (isset($uses[$returnType])) {
-                        $returnType = $uses[$returnType];
+                    $returnType = (array)$returnType;
+                    foreach ($returnType as &$returnTypeItem) {
+                        if (isset($uses[(string)$returnTypeItem])) {
+                            $returnTypeItem = $uses[(string)$returnTypeItem];
+                        }
+
+                        $returnTypeItem = \substr((string)$returnTypeItem, 0, 1) === '\\'
+                            ? \substr((string)$returnTypeItem, 1)
+                            : $returnTypeItem;
+
+                        $returnTypeItem = (null !== $returnTypeItem)
+                            ? (string)$returnTypeItem
+                            : null;
                     }
+                    unset($returnTypeItem);
 
-                    $returnType = \substr((string)$returnType, 0, 1) === '\\' ? \substr((string)$returnType, 1) : $returnType;
-
-                    if ($method->returnType instanceof NullableType) {
-                        $returnType = [$returnType, 'null'];
+                    if (1 === \count($returnType)) {
+                        $returnType = (string)$returnType[0];
                     }
 
                     $thisMethod = [
@@ -136,32 +147,40 @@ class FileProcessor
 
                     foreach ($method->params as $param) {
                         $paramType = $param->type;
-
-                        if (!$param->type instanceof NullableType) {
-                            if (!\is_null($param->type)) {
-                                $paramType = (string)$paramType;
-                            }
-                        } else {
-                            $paramType = (string)$paramType->type;
-                        }
-
-                        if (isset($uses[$paramType])) {
-                            $paramType = $uses[$paramType];
-                        }
-
-                        $paramType = \substr((string)$paramType, 0, 1) === '\\' ? \substr((string)$paramType, 1) : $paramType;
-
-                        if (
-                            $param->type instanceof NullableType
+                        if ($param->type instanceof NullableType) {
+                            $paramType = [$paramType->type, 'null'];
+                        } elseif (
+                            !empty($param->default->name->parts[0]) &&
+                            'null' === $param->default->name->parts[0]
                         ) {
-                            $paramType = [$paramType, 'null'];
-                        } elseif (!empty($param->default->name->parts[0]) && 'null' === $param->default->name->parts[0]) {
                             if (!\is_null($param->type)) {
                                 $paramType = [$paramType, 'null'];
                             } else {
                                 $paramType = ['<any>', 'null'];
                             }
+                        } elseif ($param->type instanceof UnionType) {
+                            $paramType = $paramType->types;
+                        } else {
+                            if (!\is_null($paramType)) {
+                                $paramType = (string)$paramType;
+                            }
                         }
+
+                        $paramType = (array)$paramType;
+                        foreach ($paramType as &$paramTypeItem) {
+                            if (isset($uses[(string)$paramTypeItem])) {
+                                $paramTypeItem = $uses[(string)$paramTypeItem];
+                            }
+
+                            $paramTypeItem = \substr((string)$paramTypeItem, 0, 1) === '\\'
+                                ? \substr((string)$paramTypeItem, 1)
+                                : $paramTypeItem;
+
+                            $paramTypeItem = (null !== $paramTypeItem)
+                                ? (string)$paramTypeItem
+                                : null;
+                        }
+                        unset($paramTypeItem);
 
                         $thisMethod['params']['$'.$param->var->name] = $paramType;
                     }
