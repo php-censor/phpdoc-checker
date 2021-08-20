@@ -43,6 +43,14 @@ none | --no-ansi | Disable ANSI output.
 -n | --no-interaction | Do not ask any interactive question.
 -v -vv -vvv | --verbose | Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug.
 
+## Unit tests
+
+Phpunit tests:
+
+```bash
+vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-text --coverage-html=tests/var/coverage
+```
+
 ## License
 
 PHPDoc Checker is open source software licensed under the [BSD-2-Clause license](LICENSE).

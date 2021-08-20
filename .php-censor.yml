@@ -8,6 +8,11 @@ setup:
         action: install
 
 test:
+    php_unit:
+        config:
+            - phpunit.xml.dist
+        coverage: true
+
     php_mess_detector:
         allow_failures: true
 
