@@ -24,9 +24,11 @@ use PhpParser\ParserFactory;
  */
 class FileProcessor
 {
-    protected $file;
-    protected $classes = [];
-    protected $methods = [];
+    protected string $file;
+
+    protected array $classes = [];
+
+    protected array $methods = [];
 
     /**
      * Load and parse a PHP file.
@@ -227,8 +229,7 @@ class FileProcessor
     protected function processDocblock(string $text, array $uses = []): array
     {
         $parser = new DocBlockParser($text);
-
-        $rtn = ['params' => [], 'return' => null];
+        $result = ['params' => [], 'return' => null];
 
         if (isset($parser->tags['param'])) {
             foreach ($parser->tags['param'] as $param) {
@@ -245,7 +246,7 @@ class FileProcessor
                     }
                     $types[] = \substr($tmpType, 0, 1) === '\\' ? \substr($tmpType, 1) : $tmpType;
                 }
-                $rtn['params'][$param['var']] = \implode('|', $types);
+                $result['params'][$param['var']] = \implode('|', $types);
             }
         }
 
@@ -265,9 +266,9 @@ class FileProcessor
                 }
                 $types[] = \substr($tmpType, 0, 1) === '\\' ? \substr($tmpType, 1) : $tmpType;
             }
-            $rtn['return'] = \implode('|', $types);
+            $result['return'] = \implode('|', $types);
         }
 
-        return $rtn;
+        return $result;
     }
 }
