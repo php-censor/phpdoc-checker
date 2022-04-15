@@ -29,6 +29,8 @@ class CheckerCommand extends Command
     protected array $warnings = [];
 
     protected array $exclude = [];
+    
+    protected array $files = [];
 
     protected OutputInterface $output;
 
