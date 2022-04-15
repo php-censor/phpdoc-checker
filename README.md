@@ -29,6 +29,7 @@ Short | Long | Description
 -h | --help | Display help message.
 -x | --exclude=EXCLUDE | Files and directories to exclude.
 -d | --directory=DIRECTORY | Directory to scan. [default: "./"]
+-f | --files=FILES | Files to scan. [default: []]
 none | --skip-classes | Don't check classes for docblocks.
 none | --skip-methods | Don't check methods for docblocks.
 none | --skip-signatures | Don't check docblocks against method signatures.
