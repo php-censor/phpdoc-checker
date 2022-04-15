@@ -46,6 +46,11 @@ class CheckerCommand extends Command
     protected $exclude = [];
 
     /**
+     * @var array
+     */
+    protected $files = [];
+
+    /**
      * @var OutputInterface
      */
     protected $output;
@@ -112,7 +117,7 @@ class CheckerCommand extends Command
         if (!\is_null($exclude)) {
             $this->exclude = \array_map('trim', \explode(',', $exclude));
         }
-        
+
         // Set up files:
         if (!\is_null($files)) {
             $this->files = \array_map('trim', \explode(',', $files));
@@ -265,7 +270,7 @@ class CheckerCommand extends Command
             }
         }
     }
-    
+
     /**
      * Iterate through the files and check them out
      *
