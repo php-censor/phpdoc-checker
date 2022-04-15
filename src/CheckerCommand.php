@@ -68,6 +68,7 @@ class CheckerCommand extends Command
             ->setDescription('Check PHP files within a directory for appropriate use of Docblocks.')
             ->addOption('exclude', 'x', InputOption::VALUE_REQUIRED, 'Files and directories to exclude.', null)
             ->addOption('directory', 'd', InputOption::VALUE_REQUIRED, 'Directory to scan.', './')
+            ->addOption('files', 'f', InputOption::VALUE_REQUIRED, 'Files to scan.', null)
             ->addOption('skip-classes', null, InputOption::VALUE_NONE, 'Don\'t check classes for docblocks.')
             ->addOption('skip-methods', null, InputOption::VALUE_NONE, 'Don\'t check methods for docblocks.')
             ->addOption('skip-signatures', null, InputOption::VALUE_NONE, 'Don\'t check docblocks against method signatures.')
@@ -90,6 +91,7 @@ class CheckerCommand extends Command
         $exclude              = $input->getOption('exclude');
         $json                 = $input->getOption('json');
         $this->basePath       = $input->getOption('directory');
+        $files                = $input->getOption('files');
         $this->verbose        = !$json;
         $this->output         = $output;
         $failOnWarnings       = $input->getOption('fail-on-warnings');
@@ -110,6 +112,11 @@ class CheckerCommand extends Command
         if (!\is_null($exclude)) {
             $this->exclude = \array_map('trim', \explode(',', $exclude));
         }
+        
+        // Set up files:
+        if (!\is_null($files)) {
+            $this->files = \array_map('trim', \explode(',', $files));
+        }
 
         // Check base path ends with a slash:
         if (\substr($this->basePath, -1) != '/') {
@@ -118,7 +125,11 @@ class CheckerCommand extends Command
 
         // Get files to check:
         $files = [];
-        $this->processDirectory('', $files);
+        if (count($this->files) > 0) {
+            $this->processFiles('', $this->files, $files);
+        } else {
+            $this->processDirectory('', $files);
+        }
 
         // Check files:
         $filesPerLine = (int)$input->getOption('files-per-line');
@@ -251,6 +262,28 @@ class CheckerCommand extends Command
 
             if ($item->isDir()) {
                 $this->processDirectory($itemPath . '/', $workList);
+            }
+        }
+    }
+    
+    /**
+     * Iterate through the files and check them out
+     *
+     * @param string $path
+     * @param string[] $files
+     * @param string[] $workList
+     */
+    protected function processFiles(string $path = '', array $files = [], array &$workList = []): void
+    {
+        foreach ($files as $item) {
+            $itemPath = $path . $item;
+
+            if (\in_array($itemPath, $this->exclude)) {
+                continue;
+            }
+
+            if (is_file($itemPath) && pathinfo($itemPath)["extension"] == 'php') {
+                $workList[] = $itemPath;
             }
         }
     }
