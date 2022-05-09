@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PhpDocChecker;
 
@@ -20,9 +20,6 @@ class CheckerApplication extends Application
 {
     /**
      * Override the default command name logic and return our check command.
-     *
-     * @param InputInterface $input
-     * @return string
      */
     protected function getCommandName(InputInterface $input): string
     {

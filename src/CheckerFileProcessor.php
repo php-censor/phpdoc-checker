@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PhpDocChecker;
 
@@ -48,10 +48,6 @@ class CheckerFileProcessor
 
     /**
      * Check a specific PHP file for errors.
-     *
-     * @param string $file
-     *
-     * @return array
      */
     public function processFile(string $file): array
     {
