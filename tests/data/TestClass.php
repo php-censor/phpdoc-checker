@@ -12,14 +12,17 @@ class TestClass
 
     public function test2(int $param1): bool
     {
+        return false;
     }
 
     public function test3(?int $param1): ?bool
     {
+        return false;
     }
 
     public function test4(int|float $param1): bool|int
     {
+        return false;
     }
 
     /**
@@ -43,15 +46,17 @@ class TestClass
      */
     public function test12(int $param1): bool
     {
+        return false;
     }
 
     /**
      * @param int|null $param1
      *
-     * @return bool|null
+     * @return bool|int
      */
     public function test121(int $param1): bool
     {
+        return false;
     }
 
     /**
@@ -88,6 +93,7 @@ class TestClass
      */
     public function test13(?int $param1): ?bool
     {
+        return false;
     }
 
     /**
@@ -97,6 +103,7 @@ class TestClass
      */
     public function test131(?int $param1): ?bool
     {
+        return false;
     }
 
     /**
@@ -106,6 +113,7 @@ class TestClass
      */
     public function test132(?int $param1): ?bool
     {
+        return false;
     }
 
     /**
@@ -115,6 +123,7 @@ class TestClass
      */
     public function test14(int|float $param1): bool|int
     {
+        return false;
     }
 
     /**
@@ -124,6 +133,7 @@ class TestClass
      */
     public function test141(int|float $param1): bool|int
     {
+        return false;
     }
 
     /**
@@ -133,5 +143,6 @@ class TestClass
      */
     public function test141(int|float $param1): bool|int
     {
+        return false;
     }
 }
