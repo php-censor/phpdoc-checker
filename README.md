@@ -1,3 +1,11 @@
+[![Minimum PHP version: 7.4.0](https://img.shields.io/badge/php-7.4.0%2B-blue.svg?label=PHP)](https://packagist.org/packages/php-censor/phpdoc-checker)
+[![Actions](https://github.com/php-censor/phpdoc-checker/actions/workflows/ci.yaml/badge.svg)](https://github.com/php-censor/phpdoc-checker/actions)
+[![PHP Censor](http://ci.php-censor.info/build-status/image/16?branch=master&label=PHP%20Censor)](http://ci.php-censor.info/build-status/view/16?branch=master)
+[![Codecov](https://codecov.io/gh/php-censor/phpdoc-checker/branch/master/graph/badge.svg)](https://codecov.io/gh/php-censor/phpdoc-checker)
+[![Latest Version](https://img.shields.io/packagist/v/php-censor/phpdoc-checker.svg?label=Version)](https://packagist.org/packages/php-censor/phpdoc-checker)
+[![Total downloads](https://img.shields.io/packagist/dt/php-censor/phpdoc-checker.svg?label=Downloads)](https://packagist.org/packages/php-censor/phpdoc-checker)
+[![License](https://img.shields.io/packagist/l/php-censor/phpdoc-checker.svg?label=License)](https://packagist.org/packages/php-censor/phpdoc-checker)
+
 # PHPDoc Checker
 
 Check PHP files within a directory for appropriate use of PHPDocs (Docblocks). PHPDoc Checker is fork of 
