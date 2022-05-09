@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PhpDocChecker;
 
@@ -95,7 +95,7 @@ class DocBlockParser
         $comment = \preg_split('/\r?\n\r?/', $comment);
 
         // Trim asterisks and whitespace from the beginning and whitespace from the end of lines
-        $comment = \array_map(function($line) {
+        $comment = \array_map(function ($line) {
             return \ltrim(\rtrim($line), "* \t\n\r\0\x0B");
         }, $comment);
 
@@ -106,7 +106,7 @@ class DocBlockParser
             if (self::isTagged($line)) {
                 $b++;
                 $blocks[] = [];
-            } else if($b == -1) {
+            } elseif ($b == -1) {
                 $b = 0;
                 $blocks[] = [];
             }
@@ -141,7 +141,7 @@ class DocBlockParser
                         $parts
                     );
 
-                    if (isset($mapped['var']) && \substr( $mapped['var'], 0, 3) === '...') {
+                    if (isset($mapped['var']) && \substr($mapped['var'], 0, 3) === '...') {
                         $mapped['var'] = substr($mapped['var'], 3);
                     }
                     // Store as a mapped array
@@ -158,8 +158,6 @@ class DocBlockParser
      * Whether or not a docblock contains a given @tag.
      *
      * @param string $tag The name of the @tag to check for
-     *
-     * @return bool
      */
     public function hasTag(string $tag): bool
     {
@@ -168,10 +166,6 @@ class DocBlockParser
 
     /**
      * The value of a tag
-     *
-     * @param String $tag
-     *
-     * @return array|null
      */
     public function tag(string $tag): ?array
     {
@@ -181,10 +175,7 @@ class DocBlockParser
     /**
      * The value of a tag (concatenated for multiple values)
      *
-     * @param string $tag
      * @param string $sep The separator for concatenating
-     *
-     * @return string|null
      */
     public function tagImplode(string $tag, string $sep = ' '): ?string
     {
@@ -193,8 +184,6 @@ class DocBlockParser
 
     /**
      * The value of a tag (merged recursively)
-     *
-     * @param string $tag
      *
      * @return array
      */
@@ -205,10 +194,6 @@ class DocBlockParser
 
     /**
      * Whether or not a string begins with a @tag
-     *
-     * @param string $str
-     *
-     * @return bool
      */
     public static function isTagged(string $str): bool
     {
@@ -217,10 +202,6 @@ class DocBlockParser
 
     /**
      * The tag at the beginning of a string
-     *
-     * @param string $str
-     *
-     * @return string
      */
     public static function strTag(string $str): string
     {

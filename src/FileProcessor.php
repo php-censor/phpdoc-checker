@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PhpDocChecker;
 
@@ -32,8 +32,6 @@ class FileProcessor
 
     /**
      * Load and parse a PHP file.
-     *
-     * @param string $file
      */
     public function __construct(string $file)
     {
@@ -43,13 +41,12 @@ class FileProcessor
             $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
             $stmts = $parser->parse(file_get_contents($file));
             $this->processStatements($stmts);
-        } catch (\Exception $ex) {}
+        } catch (\Exception $ex) {
+        }
     }
 
     /**
      * Return a list of class details from the given PHP file.
-     *
-     * @return array
      */
     public function getClasses(): array
     {
@@ -58,8 +55,6 @@ class FileProcessor
 
     /**
      * Return a list of method details from the given PHP file.
-     *
-     * @return array
      */
     public function getMethods(): array
     {
@@ -68,9 +63,6 @@ class FileProcessor
 
     /**
      * Looks for class definitions, and then within them method definitions, docblocks, etc.
-     *
-     * @param array  $statements
-     * @param string $prefix
      *
      * @return mixed
      */
@@ -197,11 +189,6 @@ class FileProcessor
 
     /**
      * Find and parse a docblock for a given class or method.
-     *
-     * @param Stmt  $stmt
-     * @param array $uses
-     *
-     * @return array|null
      */
     protected function getDocblock(Stmt $stmt, array $uses = []): ?array
     {
@@ -220,11 +207,6 @@ class FileProcessor
 
     /**
      * Use Paul Scott's docblock parser to parse a docblock, then return the relevant parts.
-     *
-     * @param string $text
-     * @param array  $uses
-     *
-     * @return array
      */
     protected function processDocblock(string $text, array $uses = []): array
     {

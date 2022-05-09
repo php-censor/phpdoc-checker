@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace PhpDocChecker;
 
@@ -29,7 +29,7 @@ class CheckerCommand extends Command
     protected array $warnings = [];
 
     protected array $exclude = [];
-    
+
     protected array $files = [];
 
     protected OutputInterface $output;
@@ -60,11 +60,6 @@ class CheckerCommand extends Command
 
     /**
      * Execute the actual docblock checker.
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -92,7 +87,7 @@ class CheckerCommand extends Command
         if (!\is_null($exclude)) {
             $this->exclude = \array_map('trim', \explode(',', $exclude));
         }
-        
+
         // Set up files:
         if (!\is_null($files)) {
             $this->files = \array_map('trim', \explode(',', $files));
@@ -218,7 +213,6 @@ class CheckerCommand extends Command
     /**
      * Iterate through a directory and check all of the PHP files within it.
      *
-     * @param string $path
      * @param string[] $workList
      */
     protected function processDirectory(string $path = '', array &$workList = []): void
@@ -232,7 +226,7 @@ class CheckerCommand extends Command
 
             $itemPath = $path . $item->getFilename();
 
-            if (\in_array($itemPath, $this->exclude)) {
+            if (\in_array($itemPath, $this->exclude, true)) {
                 continue;
             }
 
@@ -245,11 +239,10 @@ class CheckerCommand extends Command
             }
         }
     }
-    
+
     /**
      * Iterate through the files and check them out
      *
-     * @param string $path
      * @param string[] $files
      * @param string[] $workList
      */
@@ -258,7 +251,7 @@ class CheckerCommand extends Command
         foreach ($files as $item) {
             $itemPath = $path . $item;
 
-            if (\in_array($itemPath, $this->exclude)) {
+            if (\in_array($itemPath, $this->exclude, true)) {
                 continue;
             }
 
@@ -271,16 +264,14 @@ class CheckerCommand extends Command
     /**
      * Check a specific PHP file for errors.
      *
-     * @param string $file
      *
-     * @return array
      */
     protected function processFile(string $file): array
     {
         $result = $this->checkerFileProcessor->processFile($file);
 
         $this->errors   = \array_merge($this->errors, $result['errors']);
-        $this->warnings = \array_merge($this->warnings, $result['warnings']);;
+        $this->warnings = \array_merge($this->warnings, $result['warnings']);
 
         if (0 === \count($result['errors'])) {
             $this->passed += 1;
