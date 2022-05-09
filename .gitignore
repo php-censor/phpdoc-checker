@@ -1,4 +1,10 @@
-/vendor
 /composer.phar
-/phpdoc-checker.phar
-/.php_cs.cache
+/composer.lock
+
+/vendor
+
+/.php-cs-fixer.cache
+/.phpunit.result.cache
+
+/tests/var/log/*.log
+/tests/var/coverage
