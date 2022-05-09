@@ -82,7 +82,7 @@ class FileProcessor
 
             if ($statement instanceof Class_) {
                 $class = $statement;
-                $fullClassName = $prefix . '\\' . (string)$class->name;
+                $fullClassName = $prefix . '\\' . $class->name;
 
                 $this->classes[$fullClassName] = [
                     'file' => $this->file,
