@@ -55,6 +55,33 @@ class TestClass
     }
 
     /**
+     * @param int $param1
+     *
+     * @return
+     */
+    public function test122(int $param1)
+    {
+    }
+
+    /**
+     * @param int $param1
+     *
+     * @return
+     */
+    public function test123(int $param1): void
+    {
+    }
+
+    /**
+     * @param int $param1
+     *
+     * @return
+     */
+    public function test124(int $param1): bool
+    {
+    }
+
+    /**
      * @param int|null $param1
      *
      * @return bool|null
