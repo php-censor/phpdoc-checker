@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Test\Example;
 
@@ -57,6 +57,33 @@ class TestClass
     public function test121(int $param1): bool
     {
         return false;
+    }
+
+    /**
+     * @param int $param1
+     *
+     * @return
+     */
+    public function test122(int $param1)
+    {
+    }
+
+    /**
+     * @param int $param1
+     *
+     * @return
+     */
+    public function test123(int $param1): void
+    {
+    }
+
+    /**
+     * @param int $param1
+     *
+     * @return
+     */
+    public function test124(int $param1): bool
+    {
     }
 
     /**
