@@ -259,11 +259,13 @@ class FileProcessor
             }
 
             $types = [];
-            foreach (\explode('|', $type) as $tmpType) {
-                if (isset($uses[$tmpType])) {
-                    $tmpType = $uses[$tmpType];
+            if ($type) {
+                foreach (\explode('|', $type) as $tmpType) {
+                    if (isset($uses[$tmpType])) {
+                        $tmpType = $uses[$tmpType];
+                    }
+                    $types[] = \substr($tmpType, 0, 1) === '\\' ? \substr($tmpType, 1) : $tmpType;
                 }
-                $types[] = \substr($tmpType, 0, 1) === '\\' ? \substr($tmpType, 1) : $tmpType;
             }
             $rtn['return'] = \implode('|', $types);
         }
