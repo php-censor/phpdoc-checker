@@ -152,6 +152,10 @@ class CheckerFileProcessor
                             continue;
                         }
 
+                        if ($method['return'] === 'void') {
+                            continue;
+                        }
+
                         $warnings[] = [
                             'type'   => 'return-missing',
                             'file'   => $file,
